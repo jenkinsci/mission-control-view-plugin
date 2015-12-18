@@ -17,6 +17,11 @@
             <link href="${app.rootUrl}plugin/mission-control/css/mission-control.css" type="text/css" rel="stylesheet" />
         </head>
         <body class="height100perc">
+            <a href="${rootURL}/${it.url}configure" alt="Configure view">
+                <div class="abs-top-right">
+                    <span class="glyphicon glyphicon-cog"></span>
+                </div>
+            </a>
             <div class="container-fluid height100perc">
                 <!-- Left one/third -->
                 <div class="col-lg-6 right-border height100perc">
