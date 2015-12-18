@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  Full screen dashboard view featuring build history, build queue, job and node statuses.
+</div>

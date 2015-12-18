@@ -1,0 +1,54 @@
+html, body {
+  height: 100%;
+}
+
+body, th, td, button.btn {
+  font-size: 16px;
+}
+
+th, td {
+  text-align: center;
+}
+
+.height100perc {
+  height: 100%;
+}
+
+.height50perc {
+  height: 50%;
+}
+
+.right-border {
+  border-right: 1px dashed #4d004c;
+}
+
+.bottom-border {
+  border-bottom: 1px dashed #4d004c;
+  overflow-y: hidden;
+}
+
+.alert {
+  border: 5px solid #800000;
+}
+
+.btn {
+  border: 3px solid #2b3e50;
+  font-size: 14px;
+}
+
+.btn-success {
+  background-color: #2f6a2f;
+}
+
+.btn-danger, .table>tbody>tr.danger>td {
+  background-color: #bd2d29;
+}
+
+.btn-warning, .table>tbody>tr.warning>td {
+  background-color: #d38312;
+}
+
+.container-fluid, .col-lg-4, .col-lg-12 {
+  padding-right: 2px;
+  padding-left: 2px;
+}
