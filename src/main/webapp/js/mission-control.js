@@ -52,12 +52,12 @@ function reload_jenkins_build_queue(tableSelector, jenkinsUrl) {
   });
 }
 
-function reload_jenkins_node_statuses(tableSelector, jenkinsUrl) {
+function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
   $.getJSON( jenkinsUrl + '/computer/api/json', function( data ) {
     // Remove all existing rows
     $(tableSelector + ' tbody').find('tr').remove(); 
     $.each( data.computer, function( key, val ) {
-      statusText = !val.offline ? 'Online' : 'Offline';
+      statusText = !val.offline ? nodeStatuses['Online'] : nodeStatuses['Offline'];
       status = !val.offline ? '' : 'danger';
       newRow = '<tr class="' + status + '"><td class="text-left">' + val.displayName + '</td><td>' + statusText + '</td><td>' + val.numExecutors + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
@@ -79,6 +79,7 @@ function reload_jenkins_job_history(tableSelector, viewUrl) {
       jobName = val.buildName.replace(/(.*) #.*/, '$1');
       switch (true) {
         case /stable.*/.test(val.status):
+        case /.*back.*/.test(val.status):
           status = '';
           break;
         case /.*broken.*/.test(val.status):

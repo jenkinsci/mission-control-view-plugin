@@ -65,7 +65,7 @@ public class MissionControlView extends View {
     public static final class DescriptorImpl extends ViewDescriptor {
         @Override
         public String getDisplayName() {
-            return "Mission Control";
+            return Messages.MissionControlView_DisplayName();
         }
     }
 

@@ -9,7 +9,7 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-            <title>Jenkins - Mission Control dashboard</title>
+            <title>Jenkins - ${%Title}</title>
 
             <!-- Bootstrap -->
             <link href="${app.rootUrl}plugin/mission-control/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
@@ -26,21 +26,21 @@
                 <!-- Left one/third -->
                 <div class="col-lg-6 right-border height100perc">
                     <div class="col-lg-12 height50perc bottom-border">
-                        <h4>Job history</h4>
+                        <h4>${%JobHistory}</h4>
                         <!-- JENKINS_URL/view/All/rssAll -->
                         <table id="jenkinsJobHistory" class="table table-striped table-bordered">
                             <thead>
-                                <tr><th class="text-left">Job</th><th>Build</th><th>Finished</th><th>Duration</th></tr>
+                                <tr><th class="text-left">${%Job}</th><th>${%Build}</th><th>${%Finished}</th><th>${%Duration}</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                     </div>
                     <div class="col-lg-12 height50perc">
-                        <h4>Build queue</h4>
+                        <h4>${%BuildQueue}</h4>
                         <!-- JENKINS_URL/queue/api/json -->
                         <table id="jenkinsBuildQueue" class="table table-striped table-bordered">
                             <thead>
-                                <tr><th class="text-left">Job</th><th>In queue since</th><th>Waiting for</th></tr>
+                                <tr><th class="text-left">${%Job}</th><th>${InQueueSince}</th><th>${%WaitingFor}</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -49,16 +49,16 @@
                 <!-- Middle one/third -->
                 <div class="col-lg-6 right-border height100perc">
                     <div class="col-lg-12 height50perc bottom-border">
-                        <h4>Jobs</h4>
+                        <h4>${%Jobs}</h4>
                         <!-- JENKINS_URL/api/json -->
                         <div id="jenkinsJobStatuses" class="col-lg-12"></div>
                     </div>
                     <div class="col-lg-12 height50perc">
-                        <h4>Nodes</h4>
+                        <h4>${%Nodes}</h4>
                         <!-- JENKINS_URL/computer/api/json -->
                         <table id="jenkinsNodeStatuses" class="table table-striped table-bordered">
                             <thead>
-                                <tr><th class="text-left">Node</th><th>Status</th><th>Executors</th></tr>
+                                <tr><th class="text-left">${%Node}</th><th>${%Status}</th><th>${%Executors}</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -71,12 +71,15 @@
             <script type="text/javascript">
                 var jenkinsUrl = '${rootURL}';
                 var refreshInterval = 15*1000;
+                var nodeStatuses = [];
+                nodeStatuses["Online"] = "${%Online}";
+                nodeStatuses["Offline"] = "${%Offline}";
 
                 function reload_info (interval) {
                     reload_jenkins_job_history('#jenkinsJobHistory', jenkinsUrl + '/${it.url}');
                     reload_jenkins_job_statuses('#jenkinsJobStatuses', jenkinsUrl);
                     reload_jenkins_build_queue('#jenkinsBuildQueue', jenkinsUrl);
-                    reload_jenkins_node_statuses('#jenkinsNodeStatuses', jenkinsUrl);
+                    reload_jenkins_node_statuses('#jenkinsNodeStatuses', jenkinsUrl, nodeStatuses);
 
                     setTimeout(function(){ reload_info(interval); }, interval);
                 }
