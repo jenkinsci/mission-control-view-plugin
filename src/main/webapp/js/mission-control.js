@@ -65,7 +65,7 @@ function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
   });
 }
 
-function reload_jenkins_job_history(tableSelector, viewUrl) {
+function reload_jenkins_build_history(tableSelector, viewUrl) {
   $.getJSON( viewUrl + '/api/json', function( data ) {
     // Remove all existing rows
     $(tableSelector + ' tbody').find('tr').remove();
