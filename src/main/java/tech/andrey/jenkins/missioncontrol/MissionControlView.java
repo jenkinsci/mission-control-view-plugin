@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 @ExportedBean
@@ -75,7 +76,12 @@ public class MissionControlView extends View {
 
     @Exported(name="builds")
     public Collection<Build> getBuildHistory() {
-        RunList builds = Jenkins.getInstance().getView("All").getBuilds().limit(GET_BUILDS_LIMIT);
+        List<Item> items = Jenkins.getInstance().getAllItems();
+        List<Job> jobs = new ArrayList<Job>();
+        for (Item item : items) {
+            jobs.addAll(item.getAllJobs());
+        }
+        RunList builds = new RunList(jobs).limit(GET_BUILDS_LIMIT);
         ArrayList<Build> l = new ArrayList<Build>();
         for (Object b : builds) {
             Run build = (Run)b;
