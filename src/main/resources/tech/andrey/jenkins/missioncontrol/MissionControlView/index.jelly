@@ -12,9 +12,9 @@
             <title>Jenkins - ${%Title}</title>
 
             <!-- Bootstrap -->
-            <link href="${app.rootUrl}plugin/mission-control/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+            <link href="${app.rootUrl}plugin/mission-control-view/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
             <!-- Mission Control -->
-            <link href="${app.rootUrl}plugin/mission-control/css/mission-control.css" type="text/css" rel="stylesheet" />
+            <link href="${app.rootUrl}plugin/mission-control-view/css/mission-control.css" type="text/css" rel="stylesheet" />
         </head>
         <body class="height100perc">
             <a href="${rootURL}/${it.url}configure" alt="Configure view">
@@ -65,9 +65,9 @@
                     </div>
                 </div>
             </div>
-            <script src="${rootURL}/plugin/mission-control/js/jquery.min.js"></script>
-            <script src="${rootURL}/plugin/mission-control/js/bootstrap.min.js"></script>
-            <script src="${rootURL}/plugin/mission-control/js/mission-control.js"></script>
+            <script src="${rootURL}/plugin/mission-control-view/js/jquery.min.js"></script>
+            <script src="${rootURL}/plugin/mission-control-view/js/bootstrap.min.js"></script>
+            <script src="${rootURL}/plugin/mission-control-view/js/mission-control.js"></script>
             <script type="text/javascript">
                 var jenkinsUrl = '${rootURL}';
                 var refreshInterval = 15*1000;
