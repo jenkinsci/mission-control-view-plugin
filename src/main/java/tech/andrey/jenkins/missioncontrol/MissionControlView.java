@@ -5,6 +5,7 @@ import hudson.model.*;
 import hudson.security.Permission;
 import hudson.util.RunList;
 import jenkins.model.Jenkins;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -16,34 +17,58 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
+@SuppressWarnings("unused")
 @ExportedBean
 public class MissionControlView extends View {
-    /** A Logger object is used to log messages */
-    private static final Logger LOGGER = Logger.getLogger(MissionControlView.class.getName());
-    private static final int GET_BUILDS_LIMIT = 50;
+    private int getBuildsLimit;
 
     private String viewName;
 
-    public MissionControlView(String name) {
-        super(name);
-    }
+    private int fontSize;
+
+    private boolean useCondensedTables;
+
+    private String statusButtonSize;
 
     @DataBoundConstructor
     public MissionControlView(String name, String viewName) {
         super(name);
         this.viewName = viewName;
+        this.fontSize = 16;
+        this.getBuildsLimit = 50;
+        this.useCondensedTables = false;
+        this.statusButtonSize = "default";
     }
 
     @Override
     public Collection<TopLevelItem> getItems() {
-        ArrayList<TopLevelItem> items = new ArrayList<TopLevelItem>();
-        return items;
+        return new ArrayList<TopLevelItem>();
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public boolean isUseCondensedTables() {
+        return useCondensedTables;
+    }
+
+    public String getTableStyle() {
+        return useCondensedTables ? "table-condensed" : "";
+    }
+
+    public String getStatusButtonSize() {
+        return statusButtonSize;
     }
 
     @Override
-    protected void submit(StaplerRequest req) {
+    protected void submit(StaplerRequest req) throws ServletException, IOException {
+        JSONObject json = req.getSubmittedForm();
+        this.fontSize = json.getInt("fontSize");
+        this.useCondensedTables = json.getBoolean("useCondensedTables");
+        this.statusButtonSize = json.getString("statusButtonSize");
+        save();
     }
 
     @Override
@@ -81,7 +106,7 @@ public class MissionControlView extends View {
         for (Item item : items) {
             jobs.addAll(item.getAllJobs());
         }
-        RunList builds = new RunList(jobs).limit(GET_BUILDS_LIMIT);
+        RunList builds = new RunList(jobs).limit(this.getBuildsLimit);
         ArrayList<Build> l = new ArrayList<Build>();
         for (Object b : builds) {
             Run build = (Run)b;

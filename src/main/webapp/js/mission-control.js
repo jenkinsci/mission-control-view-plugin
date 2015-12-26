@@ -102,7 +102,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl) {
   });
 }
 
-function reload_jenkins_job_statuses(divSelector, jenkinsUrl) {
+function reload_jenkins_job_statuses(divSelector, jenkinsUrl, buttonClass) {
   $.getJSON( jenkinsUrl + '/api/json', function( data ) {
     // Remove all existing divs
     $(divSelector + ' button').remove();
@@ -128,7 +128,7 @@ function reload_jenkins_job_statuses(divSelector, jenkinsUrl) {
           console.log('Job: ' + val.name + ' Color: ' + val.color);
           status = 'btn-primary';
       }
-      newDiv = '<button class="btn btn-sm ' + status + ' col-lg-6">' + val.name + '</button>';
+      newDiv = '<button class="btn ' + buttonClass + ' ' + status + ' col-lg-6">' + val.name + '</button>';
       $(divSelector).append(newDiv);
     });
   });

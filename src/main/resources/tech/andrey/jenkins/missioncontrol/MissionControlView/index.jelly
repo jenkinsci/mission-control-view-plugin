@@ -15,6 +15,9 @@
             <link href="${app.rootUrl}plugin/mission-control-view/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
             <!-- Mission Control -->
             <link href="${app.rootUrl}plugin/mission-control-view/css/mission-control.css" type="text/css" rel="stylesheet" />
+            <style>
+                body, th, td, button.btn { font-size: ${it.fontSize}px; }
+            </style>
         </head>
         <body class="height100perc">
             <a href="${rootURL}/${it.url}configure" alt="Configure view">
@@ -28,7 +31,7 @@
                     <div class="col-lg-12 height50perc bottom-border">
                         <h4>${%BuildHistory}</h4>
                         <!-- VIEW_URL/api/json -->
-                        <table id="jenkinsBuildHistory" class="table table-striped table-bordered">
+                        <table id="jenkinsBuildHistory" class="table table-striped table-bordered ${it.tableStyle}">
                             <thead>
                                 <tr><th class="text-left">${%Job}</th><th>${%Build}</th><th>${%Finished}</th><th>${%Duration}</th></tr>
                             </thead>
@@ -38,7 +41,7 @@
                     <div class="col-lg-12 height50perc">
                         <h4>${%BuildQueue}</h4>
                         <!-- JENKINS_URL/queue/api/json -->
-                        <table id="jenkinsBuildQueue" class="table table-striped table-bordered">
+                        <table id="jenkinsBuildQueue" class="table table-striped table-bordered ${it.tableStyle}">
                             <thead>
                                 <tr><th class="text-left">${%Job}</th><th>${%InQueueSince}</th><th>${%WaitingFor}</th></tr>
                             </thead>
@@ -56,7 +59,7 @@
                     <div class="col-lg-12 height50perc">
                         <h4>${%Nodes}</h4>
                         <!-- JENKINS_URL/computer/api/json -->
-                        <table id="jenkinsNodeStatuses" class="table table-striped table-bordered">
+                        <table id="jenkinsNodeStatuses" class="table table-striped table-bordered ${it.tableStyle}">
                             <thead>
                                 <tr><th class="text-left">${%Node}</th><th>${%Status}</th><th>${%Executors}</th></tr>
                             </thead>
@@ -72,14 +75,16 @@
                 var jenkinsUrl = '${rootURL}';
                 var refreshInterval = 15*1000;
                 var nodeStatuses = [];
+                var buttonClass = '${it.statusButtonSize}';
+
                 nodeStatuses["Online"] = "${%Online}";
                 nodeStatuses["Offline"] = "${%Offline}";
 
                 function reload_info (interval) {
                     reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}');
-                    reload_jenkins_job_statuses('#jenkinsJobStatuses', jenkinsUrl);
+                    reload_jenkins_job_statuses('#jenkinsJobStatuses', jenkinsUrl, buttonClass);
                     reload_jenkins_build_queue('#jenkinsBuildQueue', jenkinsUrl);
-                    reload_jenkins_node_statuses('#jenkinsNodeStatuses', jenkinsUrl, nodeStatuses);
+                    reload_jenkins_node_statuses('#jenkinsNodeStatuses', jenkinsUrl, nodeStatuses, buttonClass);
 
                     setTimeout(function(){ reload_info(interval); }, interval);
                 }

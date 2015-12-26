@@ -1,0 +1,19 @@
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:section title="${%UI Settings}">
+        <f:entry title="${%Font size}">
+            <f:number name="fontSize" value="${it.fontSize}" />
+        </f:entry>
+        <f:block>
+            <f:checkbox name="useCondensedTables" field="useCondensedTables" />
+            ${%Use condensed tables}
+        </f:block>
+        <f:entry title="${%Status button size}">
+            <select name="statusButtonSize" class="setting-input">
+                <f:option value="btn-lg" selected="${it.statusButtonSize=='btn-lg'}">Large</f:option>
+                <f:option value="" selected="${it.statusButtonSize==''}">Default</f:option>
+                <f:option value="btn-sm" selected="${it.statusButtonSize=='btn-sm'}">Small</f:option>
+                <f:option value="btn-xs" selected="${it.statusButtonSize=='btn-xs'}">Extra small</f:option>
+            </select>
+        </f:entry>
+    </f:section>
+</j:jelly>
