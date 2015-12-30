@@ -52,7 +52,7 @@ function reload_jenkins_build_queue(tableSelector, jenkinsUrl) {
   });
 }
 
-function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
+function reload_jenkins_node_statuses(divSelector, jenkinsUrl, nodeStatuses) {
   $.getJSON( jenkinsUrl + '/computer/api/json', function( data ) {
     // Remove all existing rows
     $(tableSelector + ' tbody').find('tr').remove(); 

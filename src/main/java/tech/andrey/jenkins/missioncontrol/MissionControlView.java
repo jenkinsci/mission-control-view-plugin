@@ -31,6 +31,8 @@ public class MissionControlView extends View {
 
     private String statusButtonSize;
 
+    private String layoutHeightRatio;
+
     @DataBoundConstructor
     public MissionControlView(String name, String viewName) {
         super(name);
@@ -39,6 +41,7 @@ public class MissionControlView extends View {
         this.getBuildsLimit = 50;
         this.useCondensedTables = false;
         this.statusButtonSize = "default";
+        this.layoutHeightRatio = "6040";
     }
 
     @Override
@@ -62,12 +65,25 @@ public class MissionControlView extends View {
         return statusButtonSize;
     }
 
+    public String getLayoutHeightRatio() {
+        return layoutHeightRatio;
+    }
+
+    public String getTopHalfHeight() {
+        return layoutHeightRatio.substring(0, 2);
+    }
+
+    public String getBottomHalfHeight() {
+        return layoutHeightRatio.substring(2, 4);
+    }
+
     @Override
     protected void submit(StaplerRequest req) throws ServletException, IOException {
         JSONObject json = req.getSubmittedForm();
         this.fontSize = json.getInt("fontSize");
         this.useCondensedTables = json.getBoolean("useCondensedTables");
         this.statusButtonSize = json.getString("statusButtonSize");
+        this.layoutHeightRatio = json.getString("layoutHeightRatio");
         save();
     }
 
