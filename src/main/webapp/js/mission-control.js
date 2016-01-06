@@ -1,7 +1,7 @@
 function format_date(dt) {
   return dt.getFullYear()
-    + '-' + (dt.getMonth()<10?'0':'') + dt.getMonth()
-    + '-' + (dt.getDay()<10?'0':'') + dt.getDay()
+    + '-' + (dt.getMonth()<9?'0':'') + (dt.getMonth() + 1)
+    + '-' + (dt.getDate()<10?'0':'') + dt.getDate()
     + ' ' + (dt.getHours()<10?'0':'') + dt.getHours()
     + ':' + (dt.getMinutes()<10?'0':'') + dt.getMinutes()
     + ':' + (dt.getSeconds()<10?'0':'') + dt.getSeconds();
