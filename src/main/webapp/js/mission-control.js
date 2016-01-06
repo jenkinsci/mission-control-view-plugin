@@ -77,24 +77,23 @@ function reload_jenkins_build_history(tableSelector, viewUrl) {
       }
       dt = new Date(val.startTime + val.duration);
       jobName = val.buildName.replace(/(.*) #.*/, '$1');
-      switch (true) {
-        case /stable.*/.test(val.status):
-        case /.*back.*/.test(val.status):
+      switch (val.result) {
+        case 'SUCCESS':
           classes = '';
           break;
-        case /.*broken.*/.test(val.status):
+        case 'FAILURE':
           classes = 'danger';
           break;
-        case /.*aborted.*/.test(val.status):
-        case /.*test.*fail.*/.test(val.status):
+        case 'ABORTED':
+        case 'UNSTABLE':
           classes = 'warning';
           break;
-        case val.status == '?':
+        case 'BUILDING':
           classes = 'info invert-text-color';
           break;
         default:
-          console.log('Job: ' + jobName + ' Status: ' + val.status);
-          classes = 'warning';
+          console.log('Job: ' + val.jobName + ' Result: ' + val.result);
+          classes = '';
       }
       newRow = '<tr class="' + classes + '"><td class="text-left">' + jobName + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
@@ -115,6 +114,7 @@ function reload_jenkins_job_statuses(divSelector, viewUrl, buttonClass) {
           classes = 'btn-danger';
           break;
         case 'ABORTED':
+        case 'UNSTABLE':
           classes = 'btn-warning';
           break;
         case 'NOTBUILT':

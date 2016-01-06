@@ -122,15 +122,19 @@ public class MissionControlView extends View {
         ArrayList<Build> l = new ArrayList<Build>();
         for (Object b : builds) {
             Run build = (Run)b;
+            Job job = build.getParent();
+            // Skip Maven modules. They are part of parent Maven project
+            if (job.getClass().getName().equals("hudson.maven.MavenModule"))
+                continue;
             Result result = build.getResult();
-            l.add(new Build(build.getParent().getName(),
+            l.add(new Build(job.getName(),
                     build.getFullDisplayName(),
                     build.getNumber(),
                     build.getStartTimeInMillis(),
                     build.getDuration(),
-                    build.getBuildStatusSummary().message,
-                    result == null ? "building" : result.toString()));
+                    result == null ? "BUILDING" : result.toString()));
         }
+
         return l;
     }
 
@@ -147,17 +151,14 @@ public class MissionControlView extends View {
         @Exported
         public long duration;
         @Exported
-        public String status;
-        @Exported
         public String result;
 
-        public Build(String jobName, String buildName, int number, long startTime, long duration, String status, String result) {
+        public Build(String jobName, String buildName, int number, long startTime, long duration, String result) {
             this.jobName = jobName;
             this.buildName = buildName;
             this.number = number;
             this.startTime = startTime;
             this.duration = duration;
-            this.status = status;
             this.result = result;
         }
     }
@@ -169,8 +170,9 @@ public class MissionControlView extends View {
         String status, name;
 
         for (Job j : jobs) {
-            // Skip all matrix configuration sub-jobs
-            if (j.getClass().getName().equals("hudson.matrix.MatrixConfiguration"))
+            // Skip matrix configuration sub-jobs and Maven modules
+            if (j.getClass().getName().equals("hudson.matrix.MatrixConfiguration")
+                    || j.getClass().getName().equals("hudson.maven.MavenModule"))
                 continue;
 
             if (j.isBuilding()) {
