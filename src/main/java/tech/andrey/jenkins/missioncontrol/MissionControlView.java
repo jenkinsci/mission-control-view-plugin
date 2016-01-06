@@ -38,7 +38,7 @@ public class MissionControlView extends View {
         super(name);
         this.viewName = viewName;
         this.fontSize = 16;
-        this.getBuildsLimit = 50;
+        this.getBuildsLimit = 250;
         this.useCondensedTables = false;
         this.statusButtonSize = "default";
         this.layoutHeightRatio = "6040";
@@ -81,6 +81,8 @@ public class MissionControlView extends View {
     protected void submit(StaplerRequest req) throws ServletException, IOException {
         JSONObject json = req.getSubmittedForm();
         this.fontSize = json.getInt("fontSize");
+        if (this.fontSize == 0)
+            this.fontSize = 16;
         this.useCondensedTables = json.getBoolean("useCondensedTables");
         this.statusButtonSize = json.getString("statusButtonSize");
         this.layoutHeightRatio = json.getString("layoutHeightRatio");
