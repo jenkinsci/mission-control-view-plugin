@@ -52,3 +52,7 @@ th, td {
   z-index: 999;
   color: #ebebeb;
 }
+
+.invert-text-color {
+  color: black;
+}

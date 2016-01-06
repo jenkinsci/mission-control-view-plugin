@@ -82,7 +82,7 @@
 
                 function reload_info (interval) {
                     reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}');
-                    reload_jenkins_job_statuses('#jenkinsJobStatuses', jenkinsUrl, buttonClass);
+                    reload_jenkins_job_statuses('#jenkinsJobStatuses', jenkinsUrl + '/${it.url}', buttonClass);
                     reload_jenkins_build_queue('#jenkinsBuildQueue', jenkinsUrl);
                     reload_jenkins_node_statuses('#jenkinsNodeStatuses', jenkinsUrl, nodeStatuses, buttonClass);
 

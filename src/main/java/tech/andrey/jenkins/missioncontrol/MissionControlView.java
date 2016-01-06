@@ -117,11 +117,7 @@ public class MissionControlView extends View {
 
     @Exported(name="builds")
     public Collection<Build> getBuildHistory() {
-        List<Item> items = Jenkins.getInstance().getAllItems();
-        List<Job> jobs = new ArrayList<Job>();
-        for (Item item : items) {
-            jobs.addAll(item.getAllJobs());
-        }
+        List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
         RunList builds = new RunList(jobs).limit(this.getBuildsLimit);
         ArrayList<Build> l = new ArrayList<Build>();
         for (Object b : builds) {
@@ -163,6 +159,54 @@ public class MissionControlView extends View {
             this.duration = duration;
             this.status = status;
             this.result = result;
+        }
+    }
+
+    @Exported(name="allJobsStatuses")
+    public Collection<JobStatus> getAllJobsStatuses() {
+        List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
+        ArrayList<JobStatus> statuses = new ArrayList<JobStatus>();
+        String status, name;
+
+        for (Job j : jobs) {
+            // Skip all matrix configuration sub-jobs
+            if (j.getClass().getName().equals("hudson.matrix.MatrixConfiguration"))
+                continue;
+
+            if (j.isBuilding()) {
+                status = "BUILDING";
+            } else {
+                Run lb = j.getLastBuild();
+                if (lb == null) {
+                    status = "NOTBUILT";
+                } else {
+                    status = lb.getResult().toString();
+                }
+            }
+
+            ItemGroup parent = j.getParent();
+            if (parent != null && parent.getClass().getName().equals("com.cloudbees.hudson.plugins.folder.Folder")) {
+                name = parent.getFullName() + " / " + j.getName();
+            } else {
+                name = j.getName();
+            }
+
+            statuses.add(new JobStatus(name, status));
+        }
+
+        return statuses;
+    }
+
+    @ExportedBean(defaultVisibility = 999)
+    public class JobStatus {
+        @Exported
+        public String jobName;
+        @Exported
+        public String status;
+
+        public JobStatus(String jobName, String status) {
+            this.jobName = jobName;
+            this.status = status;
         }
     }
 }

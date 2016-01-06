@@ -52,7 +52,7 @@ function reload_jenkins_build_queue(tableSelector, jenkinsUrl) {
   });
 }
 
-function reload_jenkins_node_statuses(divSelector, jenkinsUrl, nodeStatuses) {
+function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
   $.getJSON( jenkinsUrl + '/computer/api/json', function( data ) {
     // Remove all existing rows
     $(tableSelector + ' tbody').find('tr').remove(); 
@@ -80,55 +80,54 @@ function reload_jenkins_build_history(tableSelector, viewUrl) {
       switch (true) {
         case /stable.*/.test(val.status):
         case /.*back.*/.test(val.status):
-          status = '';
+          classes = '';
           break;
         case /.*broken.*/.test(val.status):
-          status = 'danger';
+          classes = 'danger';
           break;
         case /.*aborted.*/.test(val.status):
         case /.*test.*fail.*/.test(val.status):
-          status = 'warning';
+          classes = 'warning';
           break;
         case val.status == '?':
-          status = 'info';
+          classes = 'info invert-text-color';
           break;
         default:
           console.log('Job: ' + jobName + ' Status: ' + val.status);
-          status = 'warning';
+          classes = 'warning';
       }
-      newRow = '<tr class="' + status + '"><td class="text-left">' + jobName + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
+      newRow = '<tr class="' + classes + '"><td class="text-left">' + jobName + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
     });
   });
 }
 
-function reload_jenkins_job_statuses(divSelector, jenkinsUrl, buttonClass) {
-  $.getJSON( jenkinsUrl + '/api/json', function( data ) {
+function reload_jenkins_job_statuses(divSelector, viewUrl, buttonClass) {
+  $.getJSON( viewUrl + '/api/json', function( data ) {
     // Remove all existing divs
     $(divSelector + ' button').remove();
-    $.each( data.jobs, function( key, val ) {
-      switch (val.color) {
-        case 'blue':
-          status = 'btn-success';
+    $.each( data.allJobsStatuses, function( key, val ) {
+      switch (val.status) {
+        case 'SUCCESS':
+          classes = 'btn-success';
           break;
-        case 'red':
-          status = 'btn-danger';
+        case 'FAILURE':
+          classes = 'btn-danger';
           break;
-        case 'aborted':
-        case 'yellow':
-        case 'notbuilt':
-          status = 'btn-warning';
+        case 'ABORTED':
+          classes = 'btn-warning';
           break;
-        case 'aborted_anime':
-        case 'blue_anime':
-        case 'red_anime':
-          status = 'btn-info';
+        case 'NOTBUILT':
+          classes = 'invert-text-color';
+          break;
+        case 'BUILDING':
+          classes = 'btn-info invert-text-color';
           break;
         default:
-          console.log('Job: ' + val.name + ' Color: ' + val.color);
-          status = 'btn-primary';
+          console.log('Job: ' + val.jobName + ' Status: ' + val.status);
+          classes = 'btn-primary';
       }
-      newDiv = '<button class="btn ' + buttonClass + ' ' + status + ' col-lg-6">' + val.name + '</button>';
+      newDiv = '<button class="btn ' + buttonClass + ' ' + classes + ' col-lg-6">' + val.jobName + '</button>';
       $(divSelector).append(newDiv);
     });
   });
