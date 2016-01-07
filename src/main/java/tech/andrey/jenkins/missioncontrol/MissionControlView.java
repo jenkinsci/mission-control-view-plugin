@@ -21,7 +21,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 @ExportedBean
 public class MissionControlView extends View {
-    private int getBuildsLimit;
+    private transient int getBuildsLimit;
 
     private String viewName;
 
@@ -38,10 +38,25 @@ public class MissionControlView extends View {
         super(name);
         this.viewName = viewName;
         this.fontSize = 16;
-        this.getBuildsLimit = 250;
         this.useCondensedTables = false;
-        this.statusButtonSize = "default";
+        this.statusButtonSize = "";
         this.layoutHeightRatio = "6040";
+    }
+
+    protected Object readResolve() {
+        if (getBuildsLimit == 0)
+            getBuildsLimit = 250;
+
+        if (fontSize == 0)
+            fontSize = 16;
+
+        if (statusButtonSize == null)
+            statusButtonSize = "";
+
+        if (layoutHeightRatio == null)
+            layoutHeightRatio = "6040";
+
+        return this;
     }
 
     @Override
@@ -81,8 +96,6 @@ public class MissionControlView extends View {
     protected void submit(StaplerRequest req) throws ServletException, IOException {
         JSONObject json = req.getSubmittedForm();
         this.fontSize = json.getInt("fontSize");
-        if (this.fontSize == 0)
-            this.fontSize = 16;
         this.useCondensedTables = json.getBoolean("useCondensedTables");
         this.statusButtonSize = json.getString("statusButtonSize");
         this.layoutHeightRatio = json.getString("layoutHeightRatio");
@@ -120,7 +133,7 @@ public class MissionControlView extends View {
     @Exported(name="builds")
     public Collection<Build> getBuildHistory() {
         List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
-        RunList builds = new RunList(jobs).limit(this.getBuildsLimit);
+        RunList builds = new RunList(jobs).limit(getBuildsLimit);
         ArrayList<Build> l = new ArrayList<Build>();
         for (Object b : builds) {
             Run build = (Run)b;
