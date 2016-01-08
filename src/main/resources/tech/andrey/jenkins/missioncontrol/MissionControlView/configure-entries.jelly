@@ -3,6 +3,12 @@
         <f:entry title="${%Font size}">
             <f:number name="fontSize" value="${it.fontSize}" />
         </f:entry>
+        <f:entry title="${%Records in build history}">
+            <f:number name="buildHistorySize" value="${it.buildHistorySize}" />
+        </f:entry>
+        <f:entry title="${%Records in build queue}">
+            <f:number name="buildQueueSize" value="${it.buildQueueSize}" />
+        </f:entry>
         <f:block>
             <f:checkbox name="useCondensedTables" field="useCondensedTables" />
             ${%Use condensed tables}

@@ -32,14 +32,14 @@ function format_interval(iv) {
   return ivStr;
 }
 
-function reload_jenkins_build_queue(tableSelector, jenkinsUrl) {
+function reload_jenkins_build_queue(tableSelector, jenkinsUrl, buildQueueSize) {
   $.getJSON( jenkinsUrl + '/queue/api/json', function( data ) {
     // Remove all existing rows
     $(tableSelector + ' tbody').find('tr').remove(); 
     i = 0;
     $.each( data.items, function( key, val ) {
       i++;
-      if (i > 13) {
+      if (i > buildQueueSize) {
         return;
       }
       startDate = new Date(val.inQueueSince);
@@ -65,14 +65,14 @@ function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
   });
 }
 
-function reload_jenkins_build_history(tableSelector, viewUrl) {
+function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) {
   $.getJSON( viewUrl + '/api/json', function( data ) {
     // Remove all existing rows
     $(tableSelector + ' tbody').find('tr').remove();
     i = 0;
     $.each( data.builds, function( key, val ) {
       i++;
-      if (i > 13) {
+      if (i > buildHistorySize) {
         return;
       }
       dt = new Date(val.startTime + val.duration);

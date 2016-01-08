@@ -27,6 +27,10 @@ public class MissionControlView extends View {
 
     private int fontSize;
 
+    private int buildQueueSize;
+
+    private int buildHistorySize;
+
     private boolean useCondensedTables;
 
     private String statusButtonSize;
@@ -38,6 +42,8 @@ public class MissionControlView extends View {
         super(name);
         this.viewName = viewName;
         this.fontSize = 16;
+        this.buildQueueSize = 10;
+        this.buildHistorySize = 16;
         this.useCondensedTables = false;
         this.statusButtonSize = "";
         this.layoutHeightRatio = "6040";
@@ -49,6 +55,12 @@ public class MissionControlView extends View {
 
         if (fontSize == 0)
             fontSize = 16;
+
+        if (buildHistorySize == 0)
+            buildHistorySize = 16;
+
+        if (buildQueueSize == 0)
+            buildQueueSize = 10;
 
         if (statusButtonSize == null)
             statusButtonSize = "";
@@ -66,6 +78,14 @@ public class MissionControlView extends View {
 
     public int getFontSize() {
         return fontSize;
+    }
+
+    public int getBuildHistorySize() {
+        return buildHistorySize;
+    }
+
+    public int getBuildQueueSize() {
+        return buildQueueSize;
     }
 
     public boolean isUseCondensedTables() {
@@ -96,6 +116,8 @@ public class MissionControlView extends View {
     protected void submit(StaplerRequest req) throws ServletException, IOException {
         JSONObject json = req.getSubmittedForm();
         this.fontSize = json.getInt("fontSize");
+        this.buildHistorySize = json.getInt("buildHistorySize");
+        this.buildQueueSize = json.getInt("buildQueueSize");
         this.useCondensedTables = json.getBoolean("useCondensedTables");
         this.statusButtonSize = json.getString("statusButtonSize");
         this.layoutHeightRatio = json.getString("layoutHeightRatio");
