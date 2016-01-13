@@ -46,7 +46,7 @@ function reload_jenkins_build_queue(tableSelector, jenkinsUrl, buildQueueSize) {
       now = new Date();
       waitingFor = now.getTime() - val.inQueueSince;
       taskName = val.task.name.replace(/(,?)\w*=/g, "$1");
-      newRow = '<tr><td class="text-left">' + taskName + '</td><td>' + format_date(startDate) + '</td><td>' + format_interval(waitingFor) + '</td></tr>';
+      newRow = '<tr><td class="text-left"><a href="' + val.task.url + '">'+ taskName + '</a></td><td>' + format_date(startDate) + '</td><td>' + format_interval(waitingFor) + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
     });
   });
@@ -59,7 +59,11 @@ function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
     $.each( data.computer, function( key, val ) {
       statusText = !val.offline ? nodeStatuses['Online'] : nodeStatuses['Offline'];
       status = !val.offline ? '' : 'danger';
-      newRow = '<tr class="' + status + '"><td class="text-left">' + val.displayName + '</td><td>' + statusText + '</td><td>' + val.numExecutors + '</td></tr>';
+      if (val.displayName == "master")
+        nodeLinkName = '(master)';
+      else
+        nodeLinkName = val.displayName;
+      newRow = '<tr class="' + status + '"><td class="text-left"><a href="' + jenkinsUrl + '/computer/' + encodeURIComponent(nodeLinkName) + '/">' + val.displayName + '</a></td><td>' + statusText + '</td><td>' + val.numExecutors + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
     });
   });
