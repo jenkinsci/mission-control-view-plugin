@@ -52,19 +52,18 @@ function reload_jenkins_build_queue(tableSelector, jenkinsUrl, buildQueueSize) {
   });
 }
 
-function reload_jenkins_node_statuses(tableSelector, jenkinsUrl, nodeStatuses) {
+function reload_jenkins_node_statuses(divSelector, jenkinsUrl, nodeStatuses, buttonClass) {
   $.getJSON( jenkinsUrl + '/computer/api/json', function( data ) {
     // Remove all existing rows
-    $(tableSelector + ' tbody').find('tr').remove(); 
+    $(divSelector + ' button').remove();
     $.each( data.computer, function( key, val ) {
-      statusText = !val.offline ? nodeStatuses['Online'] : nodeStatuses['Offline'];
-      status = !val.offline ? '' : 'danger';
+      classes = !val.offline ? 'btn-success' : 'btn-danger';
       if (val.displayName == "master")
         nodeLinkName = '(master)';
       else
         nodeLinkName = val.displayName;
-      newRow = '<tr class="' + status + '"><td class="text-left"><a href="' + jenkinsUrl + '/computer/' + encodeURIComponent(nodeLinkName) + '/">' + val.displayName + '</a></td><td>' + statusText + '</td><td>' + val.numExecutors + '</td></tr>';
-      $(tableSelector + ' tbody').append(newRow);
+      newDiv = '<a href="' + jenkinsUrl + '/computer/' + encodeURIComponent(nodeLinkName) + '/"><button class="btn ' + buttonClass + ' ' + classes + ' col-lg-6">' + val.displayName + ' &#47; ' + val.numExecutors + '</button></a>';
+      $(divSelector).append(newDiv);
     });
   });
 }
