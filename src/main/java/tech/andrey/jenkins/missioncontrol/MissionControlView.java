@@ -17,6 +17,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @SuppressWarnings("unused")
 @ExportedBean
@@ -37,6 +42,8 @@ public class MissionControlView extends View {
 
     private String layoutHeightRatio;
 
+    private String filterRegex;
+
     @DataBoundConstructor
     public MissionControlView(String name, String viewName) {
         super(name);
@@ -47,6 +54,7 @@ public class MissionControlView extends View {
         this.useCondensedTables = false;
         this.statusButtonSize = "";
         this.layoutHeightRatio = "6040";
+        this.filterRegex = null;
     }
 
     protected Object readResolve() {
@@ -104,6 +112,10 @@ public class MissionControlView extends View {
         return layoutHeightRatio;
     }
 
+    public String getFilterRegex() {
+        return filterRegex;
+    }
+
     public String getTopHalfHeight() {
         return layoutHeightRatio.substring(0, 2);
     }
@@ -119,6 +131,17 @@ public class MissionControlView extends View {
         this.buildHistorySize = json.getInt("buildHistorySize");
         this.buildQueueSize = json.getInt("buildQueueSize");
         this.useCondensedTables = json.getBoolean("useCondensedTables");
+        if (json.get("useRegexFilter") != null ) {
+            String regexToTest = req.getParameter("filterRegex");
+            try {
+                Pattern.compile(regexToTest);
+                this.filterRegex = regexToTest;
+            } catch (PatternSyntaxException x) {
+                Logger.getLogger(ListView.class.getName()).log(Level.WARNING, "Regex filter expression is invalid", x);
+            }
+        } else {
+            this.filterRegex = null;
+        }
         this.statusButtonSize = json.getString("statusButtonSize");
         this.layoutHeightRatio = json.getString("layoutHeightRatio");
         save();
@@ -157,12 +180,20 @@ public class MissionControlView extends View {
         List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
         RunList builds = new RunList(jobs).limit(getBuildsLimit);
         ArrayList<Build> l = new ArrayList<Build>();
+        Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+
         for (Object b : builds) {
             Run build = (Run)b;
             Job job = build.getParent();
+
             // Skip Maven modules. They are part of parent Maven project
             if (job.getClass().getName().equals("hudson.maven.MavenModule"))
                 continue;
+
+            // If filtering is enabled, skip jobs not matching the filter
+            if (r != null && !r.matcher(job.getName()).find())
+                continue;
+
             Result result = build.getResult();
             l.add(new Build(job.getName(),
                     build.getFullDisplayName(),
@@ -205,11 +236,16 @@ public class MissionControlView extends View {
         List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
         ArrayList<JobStatus> statuses = new ArrayList<JobStatus>();
         String status, name;
+        Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
 
         for (Job j : jobs) {
             // Skip matrix configuration sub-jobs and Maven modules
             if (j.getClass().getName().equals("hudson.matrix.MatrixConfiguration")
                     || j.getClass().getName().equals("hudson.maven.MavenModule"))
+                continue;
+
+            // If filtering is enabled, skip jobs not matching the filter
+            if (r != null && !r.matcher(j.getName()).find())
                 continue;
 
             if (j.isBuilding()) {
