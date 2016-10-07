@@ -235,7 +235,7 @@ public class MissionControlView extends View {
     public Collection<JobStatus> getAllJobsStatuses() {
         List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
         ArrayList<JobStatus> statuses = new ArrayList<JobStatus>();
-        String status, name;
+        String status;
         Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
 
         for (Job j : jobs) {
@@ -259,14 +259,7 @@ public class MissionControlView extends View {
                 }
             }
 
-            ItemGroup parent = j.getParent();
-            if (parent != null && parent.getClass().getName().equals("com.cloudbees.hudson.plugins.folder.Folder")) {
-                name = parent.getFullName() + " / " + j.getName();
-            } else {
-                name = j.getName();
-            }
-
-            statuses.add(new JobStatus(name, status));
+            statuses.add(new JobStatus(j.getFullName(), status));
         }
 
         return statuses;
