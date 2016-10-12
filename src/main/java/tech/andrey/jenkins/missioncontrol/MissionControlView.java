@@ -346,7 +346,12 @@ public class MissionControlView extends View {
                     status = res == null ? "UNKNOWN" : res.toString();
                 }
             }
-            String fullName = java.net.URLDecoder.decode(j.getFullName(), "UTF-8")
+
+            // Decode pipeline branch names
+            String fullName = j.getFullName();
+            try {fullName = java.net.URLDecoder.decode(j.getFullName(), "UTF-8");}
+            catch (java.io.UnsupportedEncodingException e) {e.printStackTrace();}
+
             statuses.add(new JobStatus(fullName, status));
         }
 
