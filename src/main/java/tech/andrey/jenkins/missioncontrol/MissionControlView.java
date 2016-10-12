@@ -258,8 +258,8 @@ public class MissionControlView extends View {
                     status = lb.getResult().toString();
                 }
             }
-
-            statuses.add(new JobStatus(j.getFullName(), status));
+            String fullName = java.net.URLDecoder.decode(j.getFullName(), "UTF-8")
+            statuses.add(new JobStatus(fullName, status));
         }
 
         return statuses;
