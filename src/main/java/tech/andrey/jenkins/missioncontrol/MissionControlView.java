@@ -346,8 +346,8 @@ public class MissionControlView extends View {
                     status = res == null ? "UNKNOWN" : res.toString();
                 }
             }
-
-            statuses.add(new JobStatus(j.getFullName(), status));
+            String fullName = java.net.URLDecoder.decode(j.getFullName(), "UTF-8")
+            statuses.add(new JobStatus(fullName, status));
         }
 
         return statuses;
