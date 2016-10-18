@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -27,8 +26,6 @@ import java.util.regex.PatternSyntaxException;
 @ExportedBean
 public class MissionControlView extends View {
     private transient int getBuildsLimit;
-
-    private String viewName;
 
     private int fontSize;
 
@@ -45,9 +42,8 @@ public class MissionControlView extends View {
     private String filterRegex;
 
     @DataBoundConstructor
-    public MissionControlView(String name, String viewName) {
+    public MissionControlView(String name) {
         super(name);
-        this.viewName = viewName;
         this.fontSize = 16;
         this.buildQueueSize = 10;
         this.buildHistorySize = 16;
@@ -149,7 +145,7 @@ public class MissionControlView extends View {
 
     @Override
     public Item doCreateItem(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        return Jenkins.getInstance().doCreateItem(req, rsp);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -177,9 +173,13 @@ public class MissionControlView extends View {
 
     @Exported(name="builds")
     public Collection<Build> getBuildHistory() {
-        List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
-        RunList builds = new RunList(jobs).limit(getBuildsLimit);
         ArrayList<Build> l = new ArrayList<Build>();
+        Jenkins instance = Jenkins.getInstance();
+        if (instance == null)
+            return l;
+
+        List<Job> jobs = instance.getAllItems(Job.class);
+        RunList builds = new RunList(jobs).limit(getBuildsLimit);
         Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
 
         for (Object b : builds) {
@@ -207,7 +207,7 @@ public class MissionControlView extends View {
     }
 
     @ExportedBean(defaultVisibility = 999)
-    public class Build {
+    public static class Build {
         @Exported
         public String jobName;
         @Exported
@@ -233,10 +233,15 @@ public class MissionControlView extends View {
 
     @Exported(name="allJobsStatuses")
     public Collection<JobStatus> getAllJobsStatuses() {
-        List<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
-        ArrayList<JobStatus> statuses = new ArrayList<JobStatus>();
         String status;
+        ArrayList<JobStatus> statuses = new ArrayList<JobStatus>();
+
+        Jenkins instance = Jenkins.getInstance();
+        if (instance == null)
+            return statuses;
+
         Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+        List<Job> jobs = instance.getAllItems(Job.class);
 
         for (Job j : jobs) {
             // Skip matrix configuration sub-jobs and Maven modules
@@ -255,7 +260,8 @@ public class MissionControlView extends View {
                 if (lb == null) {
                     status = "NOTBUILT";
                 } else {
-                    status = lb.getResult().toString();
+                    Result res = lb.getResult();
+                    status = res == null ? "UNKNOWN" : res.toString();
                 }
             }
 
@@ -266,7 +272,7 @@ public class MissionControlView extends View {
     }
 
     @ExportedBean(defaultVisibility = 999)
-    public class JobStatus {
+    public static class JobStatus {
         @Exported
         public String jobName;
         @Exported
