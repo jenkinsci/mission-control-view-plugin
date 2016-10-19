@@ -12,7 +12,7 @@
   </properties>
   <groupId>tech.andrey.jenkins</groupId>
   <artifactId>mission-control-view</artifactId>
-  <version>0.9.4</version>
+  <version>0.9.5-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Mission Control Plugin</name>
   <description>Jenkins dashboard view</description>
