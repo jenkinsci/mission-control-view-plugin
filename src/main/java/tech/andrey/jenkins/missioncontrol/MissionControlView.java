@@ -255,6 +255,8 @@ public class MissionControlView extends View {
 
             if (j.isBuilding()) {
                 status = "BUILDING";
+            } else if (!j.isBuildable()) {
+                status = "DISABLED";
             } else {
                 Run lb = j.getLastBuild();
                 if (lb == null) {

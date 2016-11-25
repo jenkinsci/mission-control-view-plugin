@@ -120,6 +120,7 @@ function reload_jenkins_job_statuses(divSelector, viewUrl, buttonClass) {
         case 'UNSTABLE':
           classes = 'btn-warning';
           break;
+        case 'DISABLED':
         case 'NOTBUILT':
           classes = 'invert-text-color';
           break;
