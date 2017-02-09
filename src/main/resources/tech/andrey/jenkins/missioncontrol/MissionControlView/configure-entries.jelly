@@ -21,6 +21,18 @@
         <f:entry title="${%Use condensed tables}">
             <f:checkbox name="useCondensedTables" field="useCondensedTables" />
         </f:entry>
+        <f:entry title="${%Hide Build History}">
+            <f:checkbox name="hideBuildHistory" field="hideBuildHistory" />
+        </f:entry>
+        <f:entry title="${%Hide Jobs}">
+            <f:checkbox name="hideJobs" field="hideJobs" />
+        </f:entry>
+        <f:entry title="${%Hide Build Queue}">
+            <f:checkbox name="hideBuildQueue" field="hideBuildQueue" />
+        </f:entry>
+        <f:entry title="${%Hide Nodes}">
+            <f:checkbox name="hideNodes" field="hideNodes" />
+        </f:entry>
         <f:entry title="${%Status button size}">
             <select name="statusButtonSize" class="setting-input">
                 <f:option value="btn-lg" selected="${it.statusButtonSize=='btn-lg'}">Large</f:option>

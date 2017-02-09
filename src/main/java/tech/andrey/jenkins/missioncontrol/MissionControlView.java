@@ -35,6 +35,14 @@ public class MissionControlView extends View {
 
     private boolean useCondensedTables;
 
+    private boolean hideBuildHistory;
+
+    private boolean hideJobs;
+
+    private boolean hideBuildQueue;
+
+    private boolean hideNodes;
+
     private String statusButtonSize;
 
     private String layoutHeightRatio;
@@ -48,6 +56,10 @@ public class MissionControlView extends View {
         this.buildQueueSize = 10;
         this.buildHistorySize = 16;
         this.useCondensedTables = false;
+        this.hideBuildHistory = false;
+        this.hideJobs = false;
+        this.hideBuildQueue = false;
+        this.hideNodes = false;
         this.statusButtonSize = "";
         this.layoutHeightRatio = "6040";
         this.filterRegex = null;
@@ -100,6 +112,38 @@ public class MissionControlView extends View {
         return useCondensedTables ? "table-condensed" : "";
     }
 
+    public boolean isHideBuildHistory() {
+        return hideBuildHistory;
+    }
+
+    public String getDisplayBuildHistory() {
+        return hideBuildHistory ? "display: None" : "";
+    }
+
+    public boolean isHideJobs() {
+        return hideJobs;
+    }
+
+    public String getDisplayJobs() {
+        return hideJobs ? "display: None" : "";
+    }
+
+    public boolean isHideBuildQueue() {
+        return hideBuildQueue;
+    }
+
+    public String getDisplayBuildQueue() {
+        return hideBuildQueue ? "display: None" : "";
+    }
+
+    public boolean isHideNodes() {
+        return hideNodes;
+    }
+
+    public String getDisplayNodes() {
+        return hideNodes ? "display: None" : "";
+    }
+
     public String getStatusButtonSize() {
         return statusButtonSize;
     }
@@ -139,6 +183,10 @@ public class MissionControlView extends View {
         this.buildHistorySize = json.getInt("buildHistorySize");
         this.buildQueueSize = json.getInt("buildQueueSize");
         this.useCondensedTables = json.getBoolean("useCondensedTables");
+        this.hideBuildHistory = json.getBoolean("hideBuildHistory");
+        this.hideJobs = json.getBoolean("hideJobs");
+        this.hideBuildQueue = json.getBoolean("hideBuildQueue");
+        this.hideNodes = json.getBoolean("hideNodes");
         if (json.get("useRegexFilter") != null ) {
             String regexToTest = req.getParameter("filterRegex");
             try {
