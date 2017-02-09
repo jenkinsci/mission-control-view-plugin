@@ -113,11 +113,19 @@ public class MissionControlView extends View {
     }
 
     public String getTopHalfHeight() {
-        return layoutHeightRatio.substring(0, 2);
+        if (layoutHeightRatio.length() == 5) {
+            return layoutHeightRatio.substring(0, 3);
+        } else {
+            return layoutHeightRatio.substring(0, 2);
+        }
     }
 
     public String getBottomHalfHeight() {
-        return layoutHeightRatio.substring(2, 4);
+        if (layoutHeightRatio.length() == 5) {
+            return layoutHeightRatio.substring(3, 5);
+        } else {
+            return layoutHeightRatio.substring(2, 4);
+        }
     }
 
     @Override

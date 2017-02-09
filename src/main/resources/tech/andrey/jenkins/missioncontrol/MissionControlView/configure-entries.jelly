@@ -40,6 +40,7 @@
                 <f:option value="7030" selected="${it.layoutHeightRatio=='7030'}">70 / 30</f:option>
                 <f:option value="8020" selected="${it.layoutHeightRatio=='8020'}">80 / 20</f:option>
                 <f:option value="9010" selected="${it.layoutHeightRatio=='9010'}">90 / 10</f:option>
+                <f:option value="10000" selected="${it.layoutHeightRatio=='10000'}">100 / 0</f:option>
             </select>
         </f:entry>
     </f:section>
