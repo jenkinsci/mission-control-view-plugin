@@ -43,7 +43,6 @@
         </f:entry>
         <f:entry title="${%Layout - height ratio}">
             <select name="layoutHeightRatio" class="setting-input">
-                <f:option value="100" selected="${it.layoutHeightRatio=='100'}">0 / 100</f:option>
                 <f:option value="1090" selected="${it.layoutHeightRatio=='1090'}">10 / 90</f:option>
                 <f:option value="2080" selected="${it.layoutHeightRatio=='2080'}">20 / 80</f:option>
                 <f:option value="3070" selected="${it.layoutHeightRatio=='3070'}">30 / 70</f:option>
@@ -53,7 +52,6 @@
                 <f:option value="7030" selected="${it.layoutHeightRatio=='7030'}">70 / 30</f:option>
                 <f:option value="8020" selected="${it.layoutHeightRatio=='8020'}">80 / 20</f:option>
                 <f:option value="9010" selected="${it.layoutHeightRatio=='9010'}">90 / 10</f:option>
-                <f:option value="10000" selected="${it.layoutHeightRatio=='10000'}">100 / 0</f:option>
             </select>
         </f:entry>
     </f:section>

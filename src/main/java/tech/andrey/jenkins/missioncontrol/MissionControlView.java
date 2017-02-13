@@ -112,12 +112,28 @@ public class MissionControlView extends View {
         return useCondensedTables ? "table-condensed" : "";
     }
 
+    public String getBuildHistoryHeight() {
+        if (hideBuildHistory)
+            return "0";
+        if (hideBuildQueue)
+            return "100";
+        return getTopHalfHeight();
+    }
+
     public boolean isHideBuildHistory() {
         return hideBuildHistory;
     }
 
     public String getDisplayBuildHistory() {
         return hideBuildHistory ? "display: None" : "";
+    }
+
+    public String getJobsHeight() {
+        if (hideJobs)
+            return "0";
+        if (hideNodes)
+            return "100";
+        return getTopHalfHeight();
     }
 
     public boolean isHideJobs() {
@@ -128,12 +144,28 @@ public class MissionControlView extends View {
         return hideJobs ? "display: None" : "";
     }
 
+    public String getBuildQueueHeight() {
+        if (hideBuildQueue)
+            return "0";
+        if (hideBuildHistory)
+            return "100";
+        return getBottomHalfHeight();
+    }
+
     public boolean isHideBuildQueue() {
         return hideBuildQueue;
     }
 
     public String getDisplayBuildQueue() {
         return hideBuildQueue ? "display: None" : "";
+    }
+
+    public String getNodesHeight() {
+        if (hideNodes)
+            return "0";
+        if (hideJobs)
+            return "100";
+        return getBottomHalfHeight();
     }
 
     public boolean isHideNodes() {
@@ -156,24 +188,12 @@ public class MissionControlView extends View {
         return filterRegex;
     }
 
-    public String getTopHalfHeight() {
-        if (layoutHeightRatio.length() == 5) {
-            return layoutHeightRatio.substring(0, 3);
-        } else if (layoutHeightRatio.length() == 3) {
-            return "0";
-        } else {
-            return layoutHeightRatio.substring(0, 2);
-        }
+    private String getTopHalfHeight() {
+        return layoutHeightRatio.substring(0, 2);
     }
 
-    public String getBottomHalfHeight() {
-        if (layoutHeightRatio.length() == 5) {
-            return layoutHeightRatio.substring(3, 5);
-        } else if (layoutHeightRatio.length() == 3) {
-            return "100";
-        } else {
-            return layoutHeightRatio.substring(2, 4);
-        }
+    private String getBottomHalfHeight() {
+        return layoutHeightRatio.substring(2, 4);
     }
 
     @Override
