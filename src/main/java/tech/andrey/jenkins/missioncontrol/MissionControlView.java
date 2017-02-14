@@ -47,7 +47,9 @@ public class MissionControlView extends View {
 
     private String layoutHeightRatio;
 
-    private String filterRegex;
+    private String filterBuildHistory;
+
+    private String filterJobStatuses;
 
     @DataBoundConstructor
     public MissionControlView(String name) {
@@ -62,7 +64,8 @@ public class MissionControlView extends View {
         this.hideNodes = false;
         this.statusButtonSize = "";
         this.layoutHeightRatio = "6040";
-        this.filterRegex = null;
+        this.filterBuildHistory = null;
+        this.filterJobStatuses = null;
     }
 
     protected Object readResolve() {
@@ -184,8 +187,12 @@ public class MissionControlView extends View {
         return layoutHeightRatio;
     }
 
-    public String getFilterRegex() {
-        return filterRegex;
+    public String getFilterBuildHistory() {
+        return filterBuildHistory;
+    }
+
+    public String getFilterJobStatuses() {
+        return filterJobStatuses;
     }
 
     private String getTopHalfHeight() {
@@ -207,16 +214,27 @@ public class MissionControlView extends View {
         this.hideJobs = json.getBoolean("hideJobs");
         this.hideBuildQueue = json.getBoolean("hideBuildQueue");
         this.hideNodes = json.getBoolean("hideNodes");
-        if (json.get("useRegexFilter") != null ) {
-            String regexToTest = req.getParameter("filterRegex");
+        if (json.get("useRegexFilterBuildHistory") != null ) {
+            String buildHistoryRegexToTest = req.getParameter("filterBuildHistory");
             try {
-                Pattern.compile(regexToTest);
-                this.filterRegex = regexToTest;
+                Pattern.compile(buildHistoryRegexToTest);
+                this.filterBuildHistory = buildHistoryRegexToTest;
             } catch (PatternSyntaxException x) {
                 Logger.getLogger(ListView.class.getName()).log(Level.WARNING, "Regex filter expression is invalid", x);
             }
         } else {
-            this.filterRegex = null;
+            this.filterBuildHistory = null;
+        }
+        if (json.get("useRegexFilterJobStatuses") != null ) {
+            String jobStatusesRegexToTest = req.getParameter("filterJobStatuses");
+            try {
+                Pattern.compile(jobStatusesRegexToTest);
+                this.filterJobStatuses = jobStatusesRegexToTest;
+            } catch (PatternSyntaxException x) {
+                Logger.getLogger(ListView.class.getName()).log(Level.WARNING, "Regex filter expression is invalid", x);
+            }
+        } else {
+            this.filterJobStatuses = null;
         }
         this.statusButtonSize = json.getString("statusButtonSize");
         this.layoutHeightRatio = json.getString("layoutHeightRatio");
@@ -260,7 +278,7 @@ public class MissionControlView extends View {
 
         List<Job> jobs = instance.getAllItems(Job.class);
         RunList builds = new RunList(jobs).limit(getBuildsLimit);
-        Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+        Pattern r = filterBuildHistory != null ? Pattern.compile(filterBuildHistory) : null;
 
         for (Object b : builds) {
             Run build = (Run)b;
@@ -320,7 +338,7 @@ public class MissionControlView extends View {
         if (instance == null)
             return statuses;
 
-        Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+        Pattern r = filterJobStatuses != null ? Pattern.compile(filterJobStatuses) : null;
         List<Job> jobs = instance.getAllItems(Job.class);
 
         for (Job j : jobs) {
