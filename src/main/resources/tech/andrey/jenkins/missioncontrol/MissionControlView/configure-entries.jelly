@@ -27,6 +27,9 @@
         <f:entry title="${%Use condensed tables}">
             <f:checkbox name="useCondensedTables" field="useCondensedTables" />
         </f:entry>
+        <f:entry title="${%Organize by Failures for Job Statuses}">
+            <f:checkbox name="filterByFailures" field="filterByFailures" />
+        </f:entry>
         <f:entry title="${%Hide Build History}">
             <f:checkbox name="hideBuildHistory" field="hideBuildHistory" />
         </f:entry>

@@ -14,8 +14,11 @@ import org.kohsuke.stapler.export.ExportedBean;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +37,8 @@ public class MissionControlView extends View {
     private int buildHistorySize;
 
     private boolean useCondensedTables;
+
+    private boolean filterByFailures;
 
     private boolean hideBuildHistory;
 
@@ -58,6 +63,7 @@ public class MissionControlView extends View {
         this.buildQueueSize = 10;
         this.buildHistorySize = 16;
         this.useCondensedTables = false;
+        this.filterByFailures = false;
         this.hideBuildHistory = false;
         this.hideJobs = false;
         this.hideBuildQueue = false;
@@ -109,6 +115,10 @@ public class MissionControlView extends View {
 
     public boolean isUseCondensedTables() {
         return useCondensedTables;
+    }
+
+    public boolean isFilterByFailures() {
+        return filterByFailures;
     }
 
     public String getTableStyle() {
@@ -210,6 +220,7 @@ public class MissionControlView extends View {
         this.buildHistorySize = json.getInt("buildHistorySize");
         this.buildQueueSize = json.getInt("buildQueueSize");
         this.useCondensedTables = json.getBoolean("useCondensedTables");
+        this.filterByFailures = json.getBoolean("filterByFailures");
         this.hideBuildHistory = json.getBoolean("hideBuildHistory");
         this.hideJobs = json.getBoolean("hideJobs");
         this.hideBuildQueue = json.getBoolean("hideBuildQueue");
@@ -368,6 +379,10 @@ public class MissionControlView extends View {
             statuses.add(new JobStatus(j.getFullName(), status));
         }
 
+        if (filterByFailures) {
+            Collections.sort(statuses, new StatusComparator());
+        }
+
         return statuses;
     }
 
@@ -383,4 +398,58 @@ public class MissionControlView extends View {
             this.status = status;
         }
     }
+
+    static class StatusComparator implements Serializable, Comparator<JobStatus> {
+        public int convertStatus2Level(String s) {
+            if ("BUILDING".equalsIgnoreCase(s)) {
+                return 1;
+            }
+            if ("FAILURE".equalsIgnoreCase(s)) {
+                return 2;
+            }
+            if ("UNSTABLE".equalsIgnoreCase(s)) {
+                return 3;
+            }
+            if ("ABORTED".equalsIgnoreCase(s)) {
+                return 4;
+            }
+            if ("SUCCESS".equalsIgnoreCase(s)) {
+                return 5;
+            }
+            if ("NOTBUILT".equalsIgnoreCase(s)) {
+                return 6;
+            }
+            if ("DISABLED".equalsIgnoreCase(s)) {
+                return 7;
+            }
+            return 0;
+        }
+
+        public int compare(JobStatus o1, JobStatus o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
+
+            int o1level, o2level;
+
+            o1level = convertStatus2Level(o1.status);
+            o2level = convertStatus2Level(o2.status);
+            if (o1level < o2level) {
+                return -1;
+            }
+            if (o1level > o2level) {
+                return +1;
+            }
+            else {
+                return 0;
+            }
+        }
+    };
+
 }
