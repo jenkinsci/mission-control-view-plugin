@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -400,29 +402,15 @@ public class MissionControlView extends View {
     }
 
     static class StatusComparator implements Serializable, Comparator<JobStatus> {
-        public int convertStatus2Level(String s) {
-            if ("BUILDING".equalsIgnoreCase(s)) {
-                return 1;
-            }
-            if ("FAILURE".equalsIgnoreCase(s)) {
-                return 2;
-            }
-            if ("UNSTABLE".equalsIgnoreCase(s)) {
-                return 3;
-            }
-            if ("ABORTED".equalsIgnoreCase(s)) {
-                return 4;
-            }
-            if ("SUCCESS".equalsIgnoreCase(s)) {
-                return 5;
-            }
-            if ("NOTBUILT".equalsIgnoreCase(s)) {
-                return 6;
-            }
-            if ("DISABLED".equalsIgnoreCase(s)) {
-                return 7;
-            }
-            return 0;
+        public static Map<String, Integer> statuses = new HashMap<String, Integer>();
+        static {
+            statuses.put("BUILDING", 1);
+            statuses.put("FAILURE", 2);
+            statuses.put("UNSTABLE", 3);
+            statuses.put("ABORTED", 4);
+            statuses.put("SUCCESS", 5);
+            statuses.put("NOTBUILT", 6);
+            statuses.put("DISABLED", 7);
         }
 
         public int compare(JobStatus o1, JobStatus o2) {
@@ -438,8 +426,8 @@ public class MissionControlView extends View {
 
             int o1level, o2level;
 
-            o1level = convertStatus2Level(o1.status);
-            o2level = convertStatus2Level(o2.status);
+            o1level = statuses.get(o1.status.toUpperCase());
+            o2level = statuses.get(o2.status.toUpperCase());
             if (o1level < o2level) {
                 return -1;
             }
