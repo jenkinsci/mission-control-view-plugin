@@ -271,7 +271,7 @@ public class MissionControlView extends View {
                 continue;
 
             // If filtering is enabled, skip jobs not matching the filter
-            if (r != null && !r.matcher(job.getName()).find())
+            if (r != null && !r.matcher(job.getFullName()).find())
                 continue;
 
             Result result = build.getResult();
