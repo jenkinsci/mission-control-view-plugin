@@ -1,10 +1,16 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:section title="${%Job Filter}">
-        <f:optionalBlock name="useRegexFilter" title="${%Use a regular expression to include jobs into the view}"
-                         checked="${it.filterRegex != null}">
+        <f:optionalBlock name="useRegexFilterBuildHistory" title="${%Use a regular expression to include jobs into the Build History view}"
+                         checked="${it.filterBuildHistory != null}">
             <f:entry title="${%Regular expression}">
-                <f:textbox name="filterRegex" field="filterRegex" />
+                <f:textbox name="filterBuildHistory" field="filterBuildHistory" />
+            </f:entry>
+        </f:optionalBlock>
+        <f:optionalBlock name="useRegexFilterJobStatuses" title="${%Use a regular expression to include jobs into the Job Status view}"
+                         checked="${it.filterJobStatuses != null}">
+            <f:entry title="${%Regular expression}">
+                <f:textbox name="filterJobStatuses" field="filterJobStatuses" />
             </f:entry>
         </f:optionalBlock>
     </f:section>
@@ -20,6 +26,9 @@
         </f:entry>
         <f:entry title="${%Use condensed tables}">
             <f:checkbox name="useCondensedTables" field="useCondensedTables" />
+        </f:entry>
+        <f:entry title="${%Organize by Failures for Job Statuses}">
+            <f:checkbox name="filterByFailures" field="filterByFailures" />
         </f:entry>
         <f:entry title="${%Hide Build History}">
             <f:checkbox name="hideBuildHistory" field="hideBuildHistory" />

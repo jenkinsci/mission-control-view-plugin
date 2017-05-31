@@ -14,11 +14,16 @@ import org.kohsuke.stapler.export.ExportedBean;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -35,6 +40,8 @@ public class MissionControlView extends View {
 
     private boolean useCondensedTables;
 
+    private boolean filterByFailures;
+
     private boolean hideBuildHistory;
 
     private boolean hideJobs;
@@ -47,7 +54,9 @@ public class MissionControlView extends View {
 
     private String layoutHeightRatio;
 
-    private String filterRegex;
+    private String filterBuildHistory;
+
+    private String filterJobStatuses;
 
     @DataBoundConstructor
     public MissionControlView(String name) {
@@ -56,13 +65,15 @@ public class MissionControlView extends View {
         this.buildQueueSize = 10;
         this.buildHistorySize = 16;
         this.useCondensedTables = false;
+        this.filterByFailures = false;
         this.hideBuildHistory = false;
         this.hideJobs = false;
         this.hideBuildQueue = false;
         this.hideNodes = false;
         this.statusButtonSize = "";
         this.layoutHeightRatio = "6040";
-        this.filterRegex = null;
+        this.filterBuildHistory = null;
+        this.filterJobStatuses = null;
     }
 
     protected Object readResolve() {
@@ -106,6 +117,10 @@ public class MissionControlView extends View {
 
     public boolean isUseCondensedTables() {
         return useCondensedTables;
+    }
+
+    public boolean isFilterByFailures() {
+        return filterByFailures;
     }
 
     public String getTableStyle() {
@@ -184,8 +199,12 @@ public class MissionControlView extends View {
         return layoutHeightRatio;
     }
 
-    public String getFilterRegex() {
-        return filterRegex;
+    public String getFilterBuildHistory() {
+        return filterBuildHistory;
+    }
+
+    public String getFilterJobStatuses() {
+        return filterJobStatuses;
     }
 
     private String getTopHalfHeight() {
@@ -203,20 +222,32 @@ public class MissionControlView extends View {
         this.buildHistorySize = json.getInt("buildHistorySize");
         this.buildQueueSize = json.getInt("buildQueueSize");
         this.useCondensedTables = json.getBoolean("useCondensedTables");
+        this.filterByFailures = json.getBoolean("filterByFailures");
         this.hideBuildHistory = json.getBoolean("hideBuildHistory");
         this.hideJobs = json.getBoolean("hideJobs");
         this.hideBuildQueue = json.getBoolean("hideBuildQueue");
         this.hideNodes = json.getBoolean("hideNodes");
-        if (json.get("useRegexFilter") != null ) {
-            String regexToTest = req.getParameter("filterRegex");
+        if (json.get("useRegexFilterBuildHistory") != null ) {
+            String buildHistoryRegexToTest = req.getParameter("filterBuildHistory");
             try {
-                Pattern.compile(regexToTest);
-                this.filterRegex = regexToTest;
+                Pattern.compile(buildHistoryRegexToTest);
+                this.filterBuildHistory = buildHistoryRegexToTest;
             } catch (PatternSyntaxException x) {
                 Logger.getLogger(ListView.class.getName()).log(Level.WARNING, "Regex filter expression is invalid", x);
             }
         } else {
-            this.filterRegex = null;
+            this.filterBuildHistory = null;
+        }
+        if (json.get("useRegexFilterJobStatuses") != null ) {
+            String jobStatusesRegexToTest = req.getParameter("filterJobStatuses");
+            try {
+                Pattern.compile(jobStatusesRegexToTest);
+                this.filterJobStatuses = jobStatusesRegexToTest;
+            } catch (PatternSyntaxException x) {
+                Logger.getLogger(ListView.class.getName()).log(Level.WARNING, "Regex filter expression is invalid", x);
+            }
+        } else {
+            this.filterJobStatuses = null;
         }
         this.statusButtonSize = json.getString("statusButtonSize");
         this.layoutHeightRatio = json.getString("layoutHeightRatio");
@@ -260,7 +291,7 @@ public class MissionControlView extends View {
 
         List<Job> jobs = instance.getAllItems(Job.class);
         RunList builds = new RunList(jobs).limit(getBuildsLimit);
-        Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+        Pattern r = filterBuildHistory != null ? Pattern.compile(filterBuildHistory) : null;
 
         for (Object b : builds) {
             Run build = (Run)b;
@@ -320,7 +351,7 @@ public class MissionControlView extends View {
         if (instance == null)
             return statuses;
 
-        Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+        Pattern r = filterJobStatuses != null ? Pattern.compile(filterJobStatuses) : null;
         List<Job> jobs = instance.getAllItems(Job.class);
 
         for (Job j : jobs) {
@@ -350,6 +381,10 @@ public class MissionControlView extends View {
             statuses.add(new JobStatus(j.getFullName(), status));
         }
 
+        if (filterByFailures) {
+            Collections.sort(statuses, new StatusComparator());
+        }
+
         return statuses;
     }
 
@@ -365,4 +400,44 @@ public class MissionControlView extends View {
             this.status = status;
         }
     }
+
+    static class StatusComparator implements Serializable, Comparator<JobStatus> {
+        public static Map<String, Integer> statuses = new HashMap<String, Integer>();
+        static {
+            statuses.put("BUILDING", 1);
+            statuses.put("FAILURE", 2);
+            statuses.put("UNSTABLE", 3);
+            statuses.put("ABORTED", 4);
+            statuses.put("SUCCESS", 5);
+            statuses.put("NOTBUILT", 6);
+            statuses.put("DISABLED", 7);
+        }
+
+        public int compare(JobStatus o1, JobStatus o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
+
+            int o1level, o2level;
+
+            o1level = statuses.get(o1.status.toUpperCase());
+            o2level = statuses.get(o2.status.toUpperCase());
+            if (o1level < o2level) {
+                return -1;
+            }
+            if (o1level > o2level) {
+                return +1;
+            }
+            else {
+                return 0;
+            }
+        }
+    };
+
 }
