@@ -5,4 +5,4 @@ Optimized for 1920x1080 (full screen mode).
 
 ### Screenshot
 
-![Fullscreen](/../screenshots/Fullscreen.png?raw=true =625x)
+![Fullscreen](/screenshots/Fullscreen.png)
