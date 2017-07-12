@@ -15,6 +15,7 @@ import org.kohsuke.stapler.export.ExportedBean;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -378,7 +379,15 @@ public class MissionControlView extends View {
                 }
             }
 
-            statuses.add(new JobStatus(j.getFullName(), status));
+            // Decode pipeline branch names
+            String fullName = j.getFullName();
+            try {
+                fullName = URLDecoder.decode(j.getFullName(), "UTF-8");
+            } catch (java.io.UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            statuses.add(new JobStatus(fullName, status));
         }
 
         if (filterByFailures) {
