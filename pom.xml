@@ -12,7 +12,7 @@
   </properties>
   <groupId>tech.andrey.jenkins</groupId>
   <artifactId>mission-control-view</artifactId>
-  <version>0.9.13</version>
+  <version>0.9.14-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Mission Control Plugin</name>
   <description>Jenkins dashboard view</description>
@@ -36,7 +36,7 @@
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>mission-control-view-0.9.13</tag>
+    <tag>mission-control-view-0.9.4</tag>
   </scm>
   <repositories>
     <repository>
