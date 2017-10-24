@@ -361,8 +361,16 @@ public class MissionControlView extends View {
                     || j.getClass().getName().equals("hudson.maven.MavenModule"))
                 continue;
 
+            // Decode pipeline branch names
+            String fullName = j.getFullName();
+            try {
+                fullName = URLDecoder.decode(j.getFullName(), "UTF-8");
+            } catch (java.io.UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
             // If filtering is enabled, skip jobs not matching the filter
-            if (r != null && !r.matcher(j.getName()).find())
+            if (r != null && !r.matcher(fullName).find())
                 continue;
 
             if (j.isBuilding()) {
@@ -377,14 +385,6 @@ public class MissionControlView extends View {
                     Result res = lb.getResult();
                     status = res == null ? "UNKNOWN" : res.toString();
                 }
-            }
-
-            // Decode pipeline branch names
-            String fullName = j.getFullName();
-            try {
-                fullName = URLDecoder.decode(j.getFullName(), "UTF-8");
-            } catch (java.io.UnsupportedEncodingException e) {
-                e.printStackTrace();
             }
 
             statuses.add(new JobStatus(fullName, status));
