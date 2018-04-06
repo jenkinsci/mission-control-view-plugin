@@ -98,7 +98,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
           console.log('Job: ' + val.jobName + ' Result: ' + val.result);
           classes = '';
       }
-      newRow = '<tr class="' + classes + '"><td class="text-left">' + jobName + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
+        newRow = '<tr class="' + classes + '"><td class="text-left">' + jobName + '</td><td><a href="' + val.buildUrl + '">' + val.number + '</a></td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
     });
   });

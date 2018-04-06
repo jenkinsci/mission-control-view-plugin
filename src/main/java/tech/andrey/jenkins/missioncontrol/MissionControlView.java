@@ -297,6 +297,7 @@ public class MissionControlView extends View {
         for (Object b : builds) {
             Run build = (Run)b;
             Job job = build.getParent();
+            String buildUrl = build.getAbsoluteUrl();
 
             // Skip Maven modules. They are part of parent Maven project
             if (job.getClass().getName().equals("hudson.maven.MavenModule"))
@@ -312,7 +313,8 @@ public class MissionControlView extends View {
                     build.getNumber(),
                     build.getStartTimeInMillis(),
                     build.getDuration(),
-                    result == null ? "BUILDING" : result.toString()));
+                    result == null ? "BUILDING" : result.toString(),
+                    buildUrl));
         }
 
         return l;
@@ -332,14 +334,17 @@ public class MissionControlView extends View {
         public long duration;
         @Exported
         public String result;
+        @Exported
+        public String buildUrl;
 
-        public Build(String jobName, String buildName, int number, long startTime, long duration, String result) {
+        public Build(String jobName, String buildName, int number, long startTime, long duration, String result, String buildUrl) {
             this.jobName = jobName;
             this.buildName = buildName;
             this.number = number;
             this.startTime = startTime;
             this.duration = duration;
             this.result = result;
+            this.buildUrl = buildUrl;
         }
     }
 
