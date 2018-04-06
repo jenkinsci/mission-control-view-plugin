@@ -131,7 +131,7 @@ function reload_jenkins_job_statuses(divSelector, viewUrl, buttonClass) {
           console.log('Job: ' + val.jobName + ' Status: ' + val.status);
           classes = 'btn-primary';
       }
-      newDiv = '<button class="btn ' + buttonClass + ' ' + classes + ' col-lg-6">' + val.jobName + '</button>';
+      newDiv = '<button onclick="location.href=\'' + val.jobUrl + '\'" class="btn ' + buttonClass + ' ' + classes + ' col-lg-6">' + val.jobName + '</button>';
       $(divSelector).append(newDiv);
     });
   });

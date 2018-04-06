@@ -363,6 +363,7 @@ public class MissionControlView extends View {
 
             // Decode pipeline branch names
             String fullName = j.getFullName();
+            String jobUrl = j.getAbsoluteUrl();
             try {
                 fullName = URLDecoder.decode(j.getFullName(), "UTF-8");
             } catch (java.io.UnsupportedEncodingException e) {
@@ -387,7 +388,7 @@ public class MissionControlView extends View {
                 }
             }
 
-            statuses.add(new JobStatus(fullName, status));
+            statuses.add(new JobStatus(fullName, status, jobUrl));
         }
 
         if (filterByFailures) {
@@ -402,11 +403,14 @@ public class MissionControlView extends View {
         @Exported
         public String jobName;
         @Exported
+        public String jobUrl;
+        @Exported
         public String status;
 
-        public JobStatus(String jobName, String status) {
+        public JobStatus(String jobName, String status, String jobUrl) {
             this.jobName = jobName;
             this.status = status;
+            this.jobUrl = jobUrl;
         }
     }
 
