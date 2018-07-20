@@ -352,6 +352,7 @@ public class MissionControlView extends View {
         if (instance == null)
             return statuses;
 
+        String rootUrl = instance.getRootUrl();
         Pattern r = filterJobStatuses != null ? Pattern.compile(filterJobStatuses) : null;
         List<Job> jobs = instance.getAllItems(Job.class);
 
@@ -387,7 +388,7 @@ public class MissionControlView extends View {
                 }
             }
 
-            statuses.add(new JobStatus(fullName, status));
+            statuses.add(new JobStatus(fullName, status, rootUrl + j.getUrl()));
         }
 
         if (filterByFailures) {
@@ -403,10 +404,13 @@ public class MissionControlView extends View {
         public String jobName;
         @Exported
         public String status;
+        @Exported
+        public String url;
 
-        public JobStatus(String jobName, String status) {
+        public JobStatus(String jobName, String status, String url) {
             this.jobName = jobName;
             this.status = status;
+            this.url = url;
         }
     }
 
@@ -447,6 +451,6 @@ public class MissionControlView extends View {
                 return 0;
             }
         }
-    };
+    }
 
 }
