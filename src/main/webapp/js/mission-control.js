@@ -98,7 +98,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
           console.log('Job: ' + val.jobName + ' Result: ' + val.result);
           classes = '';
       }
-      newRow = '<tr class="' + classes + '"><td class="text-left">' + jobName + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
+        newRow = '<tr class="' + classes + '"><td class="text-left">' + jobName + '</td><td><a href="' + val.buildUrl + '">' + val.number + '</a></td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></tr>';
       $(tableSelector + ' tbody').append(newRow);
     });
   });
@@ -131,7 +131,7 @@ function reload_jenkins_job_statuses(divSelector, viewUrl, buttonClass) {
           console.log('Job: ' + val.jobName + ' Status: ' + val.status);
           classes = 'btn-primary';
       }
-      newDiv = '<a href="' + val.url + '"><button class="btn ' + buttonClass + ' ' + classes + ' col-lg-6">' + val.jobName + '</button></a>';
+      newDiv = '<button onclick="location.href=\'' + val.jobUrl + '\'" class="btn ' + buttonClass + ' ' + classes + ' col-lg-6">' + val.jobName + '</button>';
       $(divSelector).append(newDiv);
     });
   });
