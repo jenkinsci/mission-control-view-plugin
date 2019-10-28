@@ -121,7 +121,7 @@ function reload_jenkins_job_statuses(divSelector, viewUrl, buttonClass) {
           classes = 'btn-warning';
           break;
         case 'DISABLED':
-        case 'NOTBUILT':
+        case 'NOT_BUILT':
           classes = 'invert-text-color';
           break;
         case 'BUILDING':
