@@ -386,7 +386,7 @@ public class MissionControlView extends View {
             } else {
                 Run lb = j.getLastBuild();
                 if (lb == null) {
-                    status = "NOTBUILT";
+                    status = "NOT_BUILT";
                 } else {
                     Result res = lb.getResult();
                     status = res == null ? "UNKNOWN" : res.toString();
@@ -427,7 +427,7 @@ public class MissionControlView extends View {
             statuses.put("UNSTABLE", 3);
             statuses.put("ABORTED", 4);
             statuses.put("SUCCESS", 5);
-            statuses.put("NOTBUILT", 6);
+            statuses.put("NOT_BUILT", 6);
             statuses.put("DISABLED", 7);
         }
 
