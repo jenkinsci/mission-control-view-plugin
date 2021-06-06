@@ -393,7 +393,7 @@ public class MissionControlView extends View {
                 }
             }
 
-            statuses.add(new JobStatus(fullName, status, jobUrl));
+            statuses.add(new JobStatus(j.getFullDisplayName(), status, jobUrl));
         }
 
         if (filterByFailures) {
